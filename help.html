@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>河北水利三类人员题库·双题库云加载版--使用说明</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
+            background: #eef5ee;
+            color: #1e3b2c;
+            padding: 30px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,32,0,0.08);
+            padding: 35px 40px;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #1e6f3f;
+            border-left: 6px solid #ff9800;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin: 28px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #d4e6d4;
+            color: #2c6e3c;
+        }
+        h3 {
+            font-size: 1.25rem;
+            margin: 20px 0 12px 0;
+            color: #2d6a4f;
+            background: #eaf4ea;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 30px;
+        }
+        p {
+            margin-bottom: 14px;
+        }
+        .note {
+            background: #fff8e7;
+            border-left: 5px solid #ffc107;
+            padding: 14px 20px;
+            margin: 20px 0;
+            border-radius: 14px;
+        }
+        .tip {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 12px 18px;
+            border-radius: 14px;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #ffefef;
+            border-left: 5px solid #f44336;
+            padding: 12px 18px;
+            border-radius: 14px;
+            margin: 15px 0;
+        }
+        .badge {
+            background: #1e6f3f;
+            color: white;
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        ul, ol {
+            margin-left: 28px;
+            margin-bottom: 18px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        hr {
+            margin: 25px 0;
+            border: none;
+            border-top: 1px solid #d0e2d0;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6c8b75;
+            border-top: 1px solid #e2efe2;
+            padding-top: 25px;
+        }
+        .grid-2 {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .card {
+            background: #fefef7;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #e2f0e2;
+            flex: 1;
+            min-width: 240px;
+        }
+        .card strong {
+            color: #d97706;
+            font-size: 1.1rem;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📖 河北水利三类人员题库 · 双题库云加载版 使用说明</h1>
+    <p>欢迎使用<strong>河北水利三类人员题库系统</strong>（双题库云端版）。本系统面向水利施工企业主要负责人、项目负责人和专职安全生产管理人员，提供大量单选题、多选题、判断题的在线练习与模拟考试，支持错题本云端同步、双题库自由切换，完全免费使用。</p>
+
+    <div class="note">
+        ⚠️ <strong>阅读提示</strong>：首次进入系统前，请认真阅读免责声明及捐助说明。系统会弹出免责声明并倒计时10秒，同意后方可继续。使用说明本身不包含免责条款，请以系统内弹窗为准。
+    </div>
+
+    <h2>📑 快速导航</h2>
+    <div class="grid-2">
+        <div class="card"><strong>1. 账号注册/登录</strong><br>使用邮箱、手机号和库码注册，管理员审核通过后即可使用完整功能。</div>
+        <div class="card"><strong>2. 练习模式</strong><br>按题型（单选/多选/判断）刷题，支持“全部题库”或“错题库”范围。</div>
+        <div class="card"><strong>3. 考试模式</strong><br>随机抽题组卷，交卷后自动计分并收录错题，可回看错题。</div>
+        <div class="card"><strong>4. 错题库管理</strong><br>答错的题目自动收入错题库，可反复练习、云端备份、导入导出。</div>
+        <div class="card"><strong>5. 双题库切换</strong><br>系统内置两套独立题库，随时切换，错题数据分开存储。</div>
+        <div class="card"><strong>6. 捐助支持</strong><br>自愿捐助，弹出说明弹窗（含5秒倒计时），确认后显示捐助图片。</div>
+    </div>
+
+    <h2>🔐 一、账号注册与登录</h2>
+    <h3>1.1 注册账号</h3>
+    <ul>
+        <li><strong>邮箱</strong>：登录账号，请填写真实邮箱（用于接收审核通知）。</li>
+        <li><strong>手机号</strong>：将自动成为您的专属“错题库码”，用于云端备份错题。</li>
+        <li><strong>密码</strong>：至少6位，请妥善保管。</li>
+        <li><strong>库码</strong>：用户分组标识（如单位代码），注册后不可更改。不同库码的用户数据互相隔离。</li>
+    </ul>
+    <p>点击「提交注册申请」后，请手动发送邮件至管理员邮箱（页面已自动填充邮件内容），管理员审核通过后即可登录。</p>
+
+    <h3>1.2 登录系统</h3>
+    <ul>
+        <li>输入注册时使用的<strong>邮箱、密码、库码</strong>，点击「登录」。</li>
+        <li>若提示“用户不存在”，请检查库码是否正确，或等待管理员审核。</li>
+        <li>登录成功后，顶部用户栏会显示您的邮箱和错题码（即注册手机号）。</li>
+    </ul>
+
+    <h3>1.3 试用模式</h3>
+    <p>如果不想注册，可点击「免注册试用」进入试用模式。试用模式下仅能作答前<strong>5道题</strong>，且无法使用错题库与云端备份。试用结束后仍可注册正式账号。</p>
+
+    <h2>🖥️ 二、主界面功能分区</h2>
+    <p>登录或试用后进入主界面，包含以下区域：</p>
+    <ul>
+        <li><strong>顶部用户栏</strong>：显示邮箱、错题码、“退出”、“捐助作者”、“切换题库”按钮。</li>
+        <li><strong>模式标签</strong>：「📘 练习模式」与「📝 考试模式」，点击可切换。</li>
+        <li><strong>错题库管理区</strong>：显示错题码，提供“刷新错题库”、“备份到云端”、“导出/导入错题库”功能。</li>
+        <li><strong>题型筛选栏</strong>：单选、多选、判断，以及“全部题库/错题库”切换。</li>
+        <li><strong>题目区域</strong>：显示当前题目、选项、确认反馈、上下题跳转及题号跳转。</li>
+    </ul>
+
+    <h2>✏️ 三、练习模式（日常刷题）</h2>
+    <h3>3.1 选择题目范围</h3>
+    <ul>
+        <li><strong>全部题库</strong>：使用当前题库中所有已加载的题目。</li>
+        <li><strong>错题库</strong>：仅显示您之前答错的题目（需登录且设置了错题码）。</li>
+    </ul>
+
+    <h3>3.2 按题型刷题</h3>
+    <p>点击「单选」「多选」「判断」按钮，可快速过滤题型，题目数量会显示在进度条中。</p>
+
+    <h3>3.3 作答与确认</h3>
+    <ul>
+        <li>单击选项即可选中（多选题可多次点击选择/取消）。</li>
+        <li>点击「确认」后，系统会判断对错并显示正确答案。</li>
+        <li><strong>自动收录错题</strong>：登录状态下，在“全部题库”中答错的题目会自动加入错题库；在“错题库”模式下答对，则会从错题库中移除该题。</li>
+        <li>使用「上一题」「下一题」或输入题号跳转，可自由切换题目。</li>
+    </ul>
+    <div class="tip">💡 提示：错题库可帮助您集中攻克薄弱知识点，反复练习直到掌握全部错题。</div>
+
+    <h2>📝 四、考试模式（模拟自测）</h2>
+    <h3>4.1 抽题规则</h3>
+    <ul>
+        <li>从当前题库中随机抽取：单选题最多100道、多选题最多20道、判断题最多20道（实际数量取决于题库存量）。</li>
+        <li>题目顺序随机，计分标准：单选0.5分，多选2分（漏选按每个正确选项0.5分计，最高1.5分），判断0.5分。</li>
+        <li>点击「重新抽题」会清空当前进度并生成一套全新的试卷。</li>
+    </ul>
+
+    <h3>4.2 作答与提交</h3>
+    <ul>
+        <li>单击选项即可选中（多选可多次点击）。</li>
+        <li>建议每道题点击「确认」锁定答案，避免误改（也可不确认，再次进入该题时可修改）。</li>
+        <li>顶部提供「单选题」「多选题」「判断题」「未答题」快速筛选，方便检查漏题。</li>
+        <li>完成全部题目后，点击「交卷」并二次确认，系统自动计分并显示总分及各题型得分。</li>
+        <li>交卷后，做错的题目会自动存入错题库（需登录且有错题码）。</li>
+    </ul>
+
+    <h3>4.3 错题回看</h3>
+    <p>考试结果弹窗中点击「错题回看」，或在考试模式中点击「错题回看」按钮，可查看本次考试中所有错题的题目、您的答案及正确答案，便于针对性复习。</p>
+
+    <h2>📚 五、错题库与云端同步</h2>
+    <h3>5.1 错题码</h3>
+    <p>注册时填写的<strong>手机号</strong>即为您的错题码。登录后，系统会自动使用该码关联云端错题数据库。错题码不支持手动修改。</p>
+
+    <h3>5.2 本地错题库</h3>
+    <p>所有错题记录会保存在您浏览器的本地存储中，即使切换设备也可以通过「备份到云端」和「刷新错题库」进行跨设备同步。</p>
+
+    <h3>5.3 备份与恢复</h3>
+    <ul>
+        <li><strong>备份到云端</strong>：将当前错题库上传至云端服务器（使用您的错题码作为存储Key）。</li>
+        <li><strong>刷新错题库</strong>：从云端拉取最新的错题记录并合并到本地。</li>
+        <li><strong>导出错题库</strong>：将错题列表导出为JSON文件，便于本地保存或分享。</li>
+        <li><strong>导入错题库</strong>：选择之前导出的JSON文件，合并到当前错题库中。</li>
+    </ul>
+    <div class="warning">⚠️ 注意：云端备份需要网络连接，且免费数据库有容量限制，建议定期导出本地保存。</div>
+
+    <h2>🔄 六、双题库切换</h2>
+    <p>本系统内置两套完整题库（第1题库 / 第2题库），可通过「切换题库」按钮随时切换。切换后：</p>
+    <ul>
+        <li>练习模式中的题目将来自新题库。</li>
+        <li>考试模式会自动重新生成新试卷。</li>
+        <li>错题库会根据当前题库分别存储（不同题库的错题互相独立）。</li>
+    </ul>
+    <p>当前使用的题库编号会显示在按钮上，方便识别。</p>
+
+    <h2>❤️ 七、捐助作者</h2>
+    <p>本系统为非营利性学习工具，所有题目均来自公开资料。若您觉得系统对您有帮助，可自愿点击「捐助作者」按钮支持运维开发。点击后会先弹出<strong>捐助说明弹窗（含5秒倒计时）</strong>，倒计时结束后按钮变为可点击，确认后才会显示捐助图片。</p>
+    <ul>
+        <li>打赏金额任意，完全自愿，不换取任何特权或额外功能。</li>
+        <li>打赏资金仅用于服务器、域名及开发维护，与题目版权无关。</li>
+    </ul>
+
+    <h2>⚖️ 八、免责声明重要提示</h2>
+    <div class="warning">
+        <strong>使用本系统即代表您已阅读并同意以下条款：</strong>
+        <ul style="margin-top: 8px;">
+            <li>题目及解析来源于网络，不保证绝对准确、完整或符合最新考纲，请自行核对权威教材。</li>
+            <li>因使用本系统导致的考试失利或其他损失，系统及开发者不承担责任。</li>
+            <li>所有题目著作权归原作者或出版机构所有，本系统不主张原创权利。</li>
+            <li>若权利人认为侵权，请联系邮箱 670656216@qq.com，我们将在48小时内处理。</li>
+        </ul>
+    </div>
+    <p>首次进入系统时，会强制弹出免责声明并倒计时10秒，只有点击「我已阅读-继续使用」后方可正常使用。点击「取消」将无法进入系统。</p>
+
+    <h2>❓ 九、常见问题解答（FAQ）</h2>
+    <ul>
+        <li><strong>Q：为什么登录时提示“用户库读取失败”？</strong><br>A：请检查库码是否正确，且该库码下确实存在您的账号。新注册账号需管理员审核通过。</li>
+        <li><strong>Q：错题库里的题目无法清除？</strong><br>A：在练习模式下，切换到“错题库”范围，然后答对某道题后，该题会自动从错题库中移除。</li>
+        <li><strong>Q：考试模式下多选题漏选如何计分？</strong><br>A：漏选时，按所选正确选项个数×0.5分计分，最高1.5分。选错即不得分。</li>
+        <li><strong>Q：切换题库后错题会丢失吗？</strong><br>A：不会，不同题库的错题分开存储，互不影响。切换回原题库错题依然存在。</li>
+        <li><strong>Q：题库加载很慢怎么办？</strong><br>A：系统采用分批次加载，优先加载前50道题即可开始练习，剩余题目会在后台静默加载，请耐心等待。</li>
+    </ul>
+
+    <div class="tip">
+        💡 如需更详细的技术支持，可通过邮箱 <strong>670656216@qq.com</strong> 联系管理员。
+    </div>
+
+    <hr>
+    <div class="footer">
+        <p>© 2025 河北水利三类人员题库 · 双题库云加载版 | 公益学习平台 | 持续更新</p>
+        <p style="font-size: 0.8rem;">本系统不收集用户敏感信息，请放心使用。</p>
+    </div>
+</div>
+</body>
+</html>
