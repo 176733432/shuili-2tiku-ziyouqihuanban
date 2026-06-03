@@ -478,6 +478,7 @@
     let bankCache = {};
     let bankLoading = { 1: false, 2: false };
     let bankTotalBatches = { 1: 0, 2: 0 };
+    let bankIntegrityChecked = { 1: false, 2: false }; // 记录完整性是否已校验
 
     let currentUser = null;
     let isTrialMode = false;
@@ -523,7 +524,6 @@
     let trialBankCache = null;
     async function buildTrialBank() {
         if (trialBankCache) return trialBankCache;
-        // 加载题库1
         const fullBank = await loadBankDataInternal(1);
         if (!fullBank) return null;
         const bank = {
@@ -535,81 +535,9 @@
         return bank;
     }
 
-    // 内部加载函数（不依赖 isTrialMode 判断，用于构建试用题库）
-    async function loadBankDataInternal(bankId) {
-        if(bankCache[bankId] && bankCache[bankId]._fullLoaded) return bankCache[bankId];
-        if(bankCache[bankId] && bankCache[bankId].single.length > 0) {
-            if(!bankLoading[bankId]) {
-                loadFullBankData(bankId, null).catch(console.warn);
-            }
-            return bankCache[bankId];
-        }
+    // 获取云端完整题库数据（用于完整性对比）
+    async function fetchCloudFullBank(bankId, onProgress) {
         const mainKey = bankId===1?BANK1_KEY:BANK2_KEY;
-        const storageKey = LOCAL_BANK_PREFIX + (bankId===1?BANK1_KEY:BANK2_KEY);
-        const stored = localStorage.getItem(storageKey);
-        if(stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                if(parsed.single && parsed.multiple && parsed.judgment) {
-                    bankCache[bankId] = parsed;
-                    if(!parsed._fullLoaded && !bankLoading[bankId]) {
-                        loadFullBankData(bankId, null).catch(console.warn);
-                    }
-                    return parsed;
-                }
-            } catch(e) {}
-        }
-        showLoading(true, '快速加载部分题库...');
-        let bank = { single: [], multiple: [], judgment: [] };
-        let batches = 0;
-        try {
-            const resp = await fetch(CLOUD.API_READ + mainKey);
-            if(!resp.ok) throw new Error('索引失败');
-            const mainData = await resp.json();
-            batches = mainData.batches || 0;
-            bankTotalBatches[bankId] = batches;
-            let loadedBatches = 0;
-            for(let i=0; i<batches; i++) {
-                const r = await fetch(CLOUD.API_READ + mainKey + '_batch' + i);
-                if(!r.ok) continue;
-                const data = await r.json();
-                if(data.single) bank.single.push(...data.single);
-                if(data.multiple) bank.multiple.push(...data.multiple);
-                if(data.judgment) bank.judgment.push(...data.judgment);
-                loadedBatches++;
-                if(bank.single.length >= 100 && bank.multiple.length >= 20 && bank.judgment.length >= 20) break;
-                if(loadedBatches >= 5) break;
-            }
-            bankCache[bankId] = bank;
-            localStorage.setItem(storageKey, JSON.stringify({ single: bank.single, multiple: bank.multiple, judgment: bank.judgment, _fullLoaded: false }));
-            showLoading(false);
-            if(!bankLoading[bankId]) {
-                loadFullBankData(bankId, null).catch(console.warn);
-            }
-            return bank;
-        } catch(e) { showLoading(false); alert('题库加载失败'); return null; }
-    }
-
-    async function loadFullBankData(bankId, onProgress) {
-        if(bankCache[bankId] && bankCache[bankId]._fullLoaded) return bankCache[bankId];
-        const mainKey = bankId===1?BANK1_KEY:BANK2_KEY;
-        const storageKey = LOCAL_BANK_PREFIX + (bankId===1?BANK1_KEY:BANK2_KEY);
-        const stored = localStorage.getItem(storageKey);
-        let bank = { single: [], multiple: [], judgment: [], _fullLoaded: false };
-        if(stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                if(parsed.single && parsed.multiple && parsed.judgment) {
-                    bank = parsed;
-                    if(bank._fullLoaded) {
-                        bankCache[bankId] = bank;
-                        if(onProgress) onProgress(100, bank);
-                        return bank;
-                    }
-                }
-            } catch(e) {}
-        }
-        showLoading(true, '正在获取题库索引...');
         let batches = 0;
         try {
             const resp = await fetch(CLOUD.API_READ + mainKey);
@@ -617,17 +545,10 @@
             const mainData = await resp.json();
             batches = mainData.batches || 0;
             bankTotalBatches[bankId] = batches;
-        } catch(e) { showLoading(false); alert('题库索引加载失败'); return null; }
-        if(batches === 0) {
-            showLoading(false);
-            alert('题库为空');
-            return null;
-        }
-        bankLoading[bankId] = true;
-        showLoading(false);
-        const bgBar = document.getElementById('bgLoadBar');
-        bgBar.classList.add('show');
-        let loadedBatches = 0;
+        } catch(e) { throw new Error('无法获取题库索引'); }
+        if(batches === 0) throw new Error('题库为空');
+        
+        const bank = { single: [], multiple: [], judgment: [] };
         for(let i=0; i<batches; i++) {
             try {
                 const r = await fetch(CLOUD.API_READ + mainKey + '_batch' + i);
@@ -636,53 +557,171 @@
                 if(data.single) bank.single.push(...data.single);
                 if(data.multiple) bank.multiple.push(...data.multiple);
                 if(data.judgment) bank.judgment.push(...data.judgment);
-                loadedBatches++;
-                const percent = Math.round((loadedBatches / batches) * 100);
-                document.getElementById('bgLoadMsg').innerHTML = `正在加载第${bankId}题库 (${loadedBatches}/${batches}批)`;
-                document.getElementById('bgLoadProgress').innerHTML = percent + '%';
-                if(onProgress) onProgress(percent, bank);
-                if(currentBankId === bankId && currentBank && !isTrialMode) {
-                    currentBank.single = bank.single;
-                    currentBank.multiple = bank.multiple;
-                    currentBank.judgment = bank.judgment;
-                    if(practiceMode === 'all') {
-                        practiceQuestions = [...currentBank[practiceType]];
-                        if(practiceIndex >= practiceQuestions.length && practiceQuestions.length > 0) practiceIndex = practiceQuestions.length-1;
-                        if(practiceIndex < 0) practiceIndex = 0;
-                        renderPracticeQuestion();
-                        document.getElementById('practice-progress').textContent = `题目 ${practiceIndex+1}/${practiceQuestions.length}`;
-                        document.getElementById('practice-jump').max = practiceQuestions.length;
-                    }
-                }
-                localStorage.setItem(storageKey, JSON.stringify({ single: bank.single, multiple: bank.multiple, judgment: bank.judgment, _fullLoaded: false }));
-                await new Promise(r => setTimeout(r, 50));
+                if(onProgress) onProgress(Math.round((i+1)/batches*100));
+                await new Promise(r => setTimeout(r, 30));
             } catch(e) { console.warn('批次加载失败', i, e); }
         }
-        bank._fullLoaded = true;
-        bankCache[bankId] = bank;
-        localStorage.setItem(storageKey, JSON.stringify({ single: bank.single, multiple: bank.multiple, judgment: bank.judgment, _fullLoaded: true }));
-        bankLoading[bankId] = false;
-        document.getElementById('bgLoadMsg').innerHTML = `第${bankId}题库加载完成！共 ${bank.single.length+bank.multiple.length+bank.judgment.length} 题`;
-        document.getElementById('bgLoadProgress').innerHTML = '100%';
-        setTimeout(() => { bgBar.classList.remove('show'); }, 3000);
-        if(onProgress) onProgress(100, bank);
         return bank;
+    }
+
+    // 对比两个题库数据是否一致（通过题目数量和ID集合）
+    function isBankDataIdentical(localBank, cloudBank) {
+        if (!localBank || !cloudBank) return false;
+        // 比较各题型数量
+        if (localBank.single.length !== cloudBank.single.length) return false;
+        if (localBank.multiple.length !== cloudBank.multiple.length) return false;
+        if (localBank.judgment.length !== cloudBank.judgment.length) return false;
+        // 比较题目ID集合
+        const getIds = (arr) => new Set(arr.map(q => q.id));
+        const localSingleIds = getIds(localBank.single);
+        const cloudSingleIds = getIds(cloudBank.single);
+        if (localSingleIds.size !== cloudSingleIds.size) return false;
+        for (let id of localSingleIds) if (!cloudSingleIds.has(id)) return false;
+        
+        const localMultiIds = getIds(localBank.multiple);
+        const cloudMultiIds = getIds(cloudBank.multiple);
+        if (localMultiIds.size !== cloudMultiIds.size) return false;
+        for (let id of localMultiIds) if (!cloudMultiIds.has(id)) return false;
+        
+        const localJudgeIds = getIds(localBank.judgment);
+        const cloudJudgeIds = getIds(cloudBank.judgment);
+        if (localJudgeIds.size !== cloudJudgeIds.size) return false;
+        for (let id of localJudgeIds) if (!cloudJudgeIds.has(id)) return false;
+        
+        return true;
+    }
+
+    // 完整性校验并同步（如果数据不一致则下载云端数据覆盖缓存）
+    async function validateAndSyncCache(bankId, silent = false) {
+        if (bankIntegrityChecked[bankId]) return true;
+        const storageKey = LOCAL_BANK_PREFIX + (bankId===1?BANK1_KEY:BANK2_KEY);
+        const stored = localStorage.getItem(storageKey);
+        let localBank = null;
+        if(stored) {
+            try { localBank = JSON.parse(stored); } catch(e) {}
+        }
+        // 如果没有本地缓存，不需要校验
+        if (!localBank) {
+            bankIntegrityChecked[bankId] = true;
+            return true;
+        }
+        
+        const bgBar = document.getElementById('bgLoadBar');
+        if (!silent) bgBar.classList.add('show');
+        
+        let cloudBank = null;
+        try {
+            cloudBank = await fetchCloudFullBank(bankId, (percent) => {
+                document.getElementById('bgLoadMsg').innerHTML = `校验第${bankId}题库完整性 (${percent}%)`;
+                document.getElementById('bgLoadProgress').innerHTML = percent + '%';
+            });
+        } catch(e) {
+            console.warn('云端数据获取失败，跳过校验', e);
+            if (!silent) bgBar.classList.remove('show');
+            bankIntegrityChecked[bankId] = true;
+            return true;
+        }
+        
+        const isIdentical = isBankDataIdentical(localBank, cloudBank);
+        if (!isIdentical) {
+            // 数据不一致，用云端数据覆盖本地缓存
+            document.getElementById('bgLoadMsg').innerHTML = `第${bankId}题库数据更新中...`;
+            cloudBank._fullLoaded = true;
+            bankCache[bankId] = cloudBank;
+            localStorage.setItem(storageKey, JSON.stringify({ 
+                single: cloudBank.single, 
+                multiple: cloudBank.multiple, 
+                judgment: cloudBank.judgment, 
+                _fullLoaded: true 
+            }));
+            // 如果当前正在使用此题库，刷新界面数据
+            if (currentBankId === bankId && currentBank && !isTrialMode) {
+                currentBank = cloudBank;
+                if (practiceMode === 'all') {
+                    practiceQuestions = [...currentBank[practiceType]];
+                    if(practiceIndex >= practiceQuestions.length && practiceQuestions.length > 0) practiceIndex = practiceQuestions.length-1;
+                    if(practiceIndex < 0) practiceIndex = 0;
+                    renderPracticeQuestion();
+                    document.getElementById('practice-progress').textContent = `题目 ${practiceIndex+1}/${practiceQuestions.length}`;
+                    document.getElementById('practice-jump').max = practiceQuestions.length;
+                }
+                generateExamPaper();
+                renderExamQuestion();
+            }
+            document.getElementById('bgLoadMsg').innerHTML = `第${bankId}题库已同步最新数据`;
+            setTimeout(() => { if (!silent) bgBar.classList.remove('show'); }, 2000);
+        } else {
+            if (!silent) bgBar.classList.remove('show');
+        }
+        bankIntegrityChecked[bankId] = true;
+        return true;
+    }
+
+    // 内部加载函数：优先从本地缓存读取，然后后台校验完整性
+    async function loadBankDataInternal(bankId, silent = false) {
+        const storageKey = LOCAL_BANK_PREFIX + (bankId===1?BANK1_KEY:BANK2_KEY);
+        const stored = localStorage.getItem(storageKey);
+        let bank = null;
+        if(stored) {
+            try {
+                bank = JSON.parse(stored);
+                bankCache[bankId] = bank;
+                // 后台异步校验完整性（不阻塞界面）
+                if (!bankIntegrityChecked[bankId]) {
+                    validateAndSyncCache(bankId, silent).catch(console.warn);
+                }
+                return bank;
+            } catch(e) {}
+        }
+        // 无缓存，执行初次加载
+        showLoading(true, '首次加载题库...');
+        const mainKey = bankId===1?BANK1_KEY:BANK2_KEY;
+        let batches = 0;
+        try {
+            const resp = await fetch(CLOUD.API_READ + mainKey);
+            if(!resp.ok) throw new Error('索引失败');
+            const mainData = await resp.json();
+            batches = mainData.batches || 0;
+            bankTotalBatches[bankId] = batches;
+        } catch(e) { showLoading(false); alert('题库索引加载失败'); return null; }
+        
+        const newBank = { single: [], multiple: [], judgment: [], _fullLoaded: false };
+        const bgBar = document.getElementById('bgLoadBar');
+        bgBar.classList.add('show');
+        for(let i=0; i<batches; i++) {
+            try {
+                const r = await fetch(CLOUD.API_READ + mainKey + '_batch' + i);
+                if(!r.ok) continue;
+                const data = await r.json();
+                if(data.single) newBank.single.push(...data.single);
+                if(data.multiple) newBank.multiple.push(...data.multiple);
+                if(data.judgment) newBank.judgment.push(...data.judgment);
+                const percent = Math.round((i+1)/batches*100);
+                document.getElementById('bgLoadMsg').innerHTML = `正在加载第${bankId}题库 (${i+1}/${batches}批)`;
+                document.getElementById('bgLoadProgress').innerHTML = percent + '%';
+            } catch(e) { console.warn('批次加载失败', i, e); }
+        }
+        newBank._fullLoaded = true;
+        bankCache[bankId] = newBank;
+        localStorage.setItem(storageKey, JSON.stringify({ 
+            single: newBank.single, 
+            multiple: newBank.multiple, 
+            judgment: newBank.judgment, 
+            _fullLoaded: true 
+        }));
+        bankIntegrityChecked[bankId] = true;
+        showLoading(false);
+        bgBar.classList.remove('show');
+        return newBank;
     }
 
     // 对外暴露的 loadBankData，试用模式下返回固定题库
     async function loadBankData(bankId) {
         if (isTrialMode) {
-            // 试用模式：只使用题库1的固定范围题目
             const trialBank = await buildTrialBank();
             return trialBank;
         }
-        if(bankCache[bankId] && bankCache[bankId]._fullLoaded) return bankCache[bankId];
-        if(bankCache[bankId] && bankCache[bankId].single.length > 0) {
-            if(!bankLoading[bankId]) {
-                loadFullBankData(bankId, null).catch(console.warn);
-            }
-            return bankCache[bankId];
-        }
+        if (bankCache[bankId] && bankCache[bankId]._fullLoaded) return bankCache[bankId];
         return await loadBankDataInternal(bankId);
     }
 
@@ -749,7 +788,6 @@
         examWrongDetails = [];
         let singles, multis, judges;
         if (isTrialMode) {
-            // 试用考试也使用固定范围题目，但不随机抽取，直接用全部固定题目
             singles = currentBank.single.slice(0, 100);
             multis = currentBank.multiple.slice(0, 20);
             judges = currentBank.judgment.slice(0, 20);
@@ -771,7 +809,6 @@
         if (practiceMode === 'all') {
             let allQuestions = [...currentBank[practiceType]];
             if (isTrialMode) {
-                // 试用模式下，限制每种题型的最大范围
                 if (practiceType === 'single') allQuestions = allQuestions.slice(0, 100);
                 else if (practiceType === 'multiple') allQuestions = allQuestions.slice(0, 20);
                 else if (practiceType === 'judgment') allQuestions = allQuestions.slice(0, 20);
@@ -784,7 +821,6 @@
         renderPracticeQuestion();
     }
 
-    // 检查是否超出试用范围，超出则弹窗并返回注册界面
     function checkTrialRangeAndRedirect() {
         if (!isTrialMode) return true;
         let maxAllowed = 0;
@@ -806,14 +842,11 @@
     }
 
     function redirectToRegister() {
-        // 退出试用模式，显示注册界面
         isTrialMode = false;
         currentUser = null;
         document.getElementById('main-section').style.display = 'none';
         document.getElementById('auth-section').style.display = 'block';
-        // 重置全局状态
         if (examTimerInterval) clearInterval(examTimerInterval);
-        // 切换到注册标签
         switchAuthTab('register');
     }
 
@@ -829,7 +862,6 @@
             return;
         }
         if(practiceIndex >= practiceQuestions.length) practiceIndex = 0;
-        // 试用模式边界检查
         if (!checkTrialRangeAndRedirect()) return;
         const q = practiceQuestions[practiceIndex];
         document.getElementById('practice-q-num').textContent = `题目 ${practiceIndex+1}`;
@@ -852,32 +884,6 @@
         document.getElementById('practice-jump').value = practiceIndex+1;
     }
 
-    // 覆盖上一题/下一题/跳转函数，加入范围检查
-    const originalPrev = document.getElementById('practice-prev').onclick;
-    const originalNext = document.getElementById('practice-next').onclick;
-    const originalJump = document.getElementById('practice-jump-btn').onclick;
-
-    function practicePrev() {
-        if(practiceIndex > 0) {
-            practiceIndex--;
-            renderPracticeQuestion();
-        }
-    }
-    function practiceNext() {
-        if(practiceIndex < practiceQuestions.length-1) {
-            practiceIndex++;
-            renderPracticeQuestion();
-        }
-    }
-    function practiceJump() {
-        let idx = parseInt(document.getElementById('practice-jump').value)-1;
-        if(idx>=0 && idx<practiceQuestions.length) {
-            practiceIndex = idx;
-            renderPracticeQuestion();
-        }
-    }
-
-    // 其余函数（selectPracticeOption, practiceConfirm, shuffle, getFilteredExamQuestions, renderExamQuestion, handleExamOptionClick, examConfirm, submitExam, showExamWrongModal 等保持不变，但需要引用上面的新函数）
     function selectPracticeOption(el, type) { 
         const val = el.dataset.value; 
         if(type === 'multiple') { 
@@ -955,10 +961,10 @@
         document.querySelectorAll('[data-type]').forEach(b => b.addEventListener('click', function(){ practiceType = this.dataset.type; updatePracticeNav(); loadPracticeQuestions(); }));
         document.getElementById('refresh-wrong-btn').onclick = async () => { if(isTrialMode) return alert('试用模式下不能使用错题库'); await syncWrongOnLogin(); if(practiceMode==='wrong') loadPracticeQuestions(); };
         document.getElementById('wrong-code-input').addEventListener('change', async function(){ if(isTrialMode||!currentUser) { wrongCode=this.value; await syncWrongOnLogin(); } });
-        document.getElementById('practice-prev').onclick = () => practicePrev();
-        document.getElementById('practice-next').onclick = () => practiceNext();
+        document.getElementById('practice-prev').onclick = () => { if(practiceIndex>0){ practiceIndex--; renderPracticeQuestion(); } };
+        document.getElementById('practice-next').onclick = () => { if(practiceIndex<practiceQuestions.length-1){ practiceIndex++; renderPracticeQuestion(); } };
         document.getElementById('practice-confirm').onclick = practiceConfirm;
-        document.getElementById('practice-jump-btn').onclick = () => practiceJump();
+        document.getElementById('practice-jump-btn').onclick = () => { let idx = parseInt(document.getElementById('practice-jump').value)-1; if(idx>=0 && idx<practiceQuestions.length) { practiceIndex = idx; renderPracticeQuestion(); } };
         document.getElementById('export-wrong-btn').onclick = () => { if(isTrialMode) alert('试用模式下不能导出错题库'); else exportWrongItems(); };
         document.getElementById('import-wrong-btn').onclick = () => { if(isTrialMode) alert('试用模式下不能导入错题库'); else document.getElementById('import-file-input').click(); };
         document.getElementById('import-file-input').onchange = function(e) { if(e.target.files.length) { importWrongItems(e.target.files[0]); e.target.value = ''; } };
@@ -1026,7 +1032,7 @@
                 await syncWrongOnLogin(); 
             } 
         }
-        currentBankId = 1; // 试用固定题库1
+        currentBankId = 1;
         currentBank = await loadBankData(currentBankId);
         if(!currentBank) { alert('题库加载失败'); return; }
         initPracticeAndExam();
@@ -1138,7 +1144,6 @@
         document.getElementById('disclaimerModal').style.display = 'none'; 
         bindDonateButtons();
         bindSwitchBankButtons();
-        // 预加载题库（如果是试用模式则加载固定题库）
         let saved = localStorage.getItem('slzck_user'); 
         if(saved && !isTrialMode) { 
             try { currentUser = JSON.parse(saved); await enterApp(); } catch(e){} 
