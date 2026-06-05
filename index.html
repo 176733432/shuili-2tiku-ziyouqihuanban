@@ -478,7 +478,7 @@
     let bankCache = {};
     let bankLoading = { 1: false, 2: false };
     let bankTotalBatches = { 1: 0, 2: 0 };
-    let bankIntegrityChecked = { 1: false, 2: false }; // 记录完整性是否已校验
+    let bankIntegrityChecked = { 1: false, 2: false };
 
     let currentUser = null;
     let isTrialMode = false;
@@ -495,8 +495,6 @@
     let examWrongDetails = [];
 
     let donateCountdownInterval = null;
-    
-    // 考试计时相关
     let examTimerInterval = null;
     let examRemainingSeconds = 2 * 3600 + 30 * 60;
 
@@ -518,9 +516,19 @@
     async function addWrongItem(question) { if(!getWrongCloudKey() || isTrialMode) return; if(!wrongItems.some(item => item.id == question.id && item.type == question.type)) { wrongItems.push({ id: question.id, type: question.type }); saveWrongLocal(); } }
     async function removeWrongItem(question) { if(!getWrongCloudKey() || isTrialMode) return; wrongItems = wrongItems.filter(item => !(item.id == question.id && item.type == question.type)); saveWrongLocal(); }
     function getQuestionByIdType(id, type) { if(!currentBank) return null; const arr = currentBank[type]; return arr ? arr.find(q => q.id == id) : null; }
-    function getWrongQuestionsByType(type) { return wrongItems.filter(item => item.type === type).map(item => getQuestionByIdType(item.id, item.type)).filter(q => q !== null); }
+    function getWrongQuestionsByType(type) { 
+        if(!currentBank) return [];
+        return wrongItems.filter(item => item.type === type).map(item => getQuestionByIdType(item.id, item.type)).filter(q => q !== null); 
+    }
 
-    // 试用模式专用：构建固定题库（题库1单选前100、多选前20、判断前20）
+    // 刷新错题库显示（切换题库后调用）
+    function refreshWrongQuestions() {
+        if(practiceMode === 'wrong') {
+            loadPracticeQuestions();
+        }
+    }
+
+    // 试用模式专用：构建固定题库
     let trialBankCache = null;
     async function buildTrialBank() {
         if (trialBankCache) return trialBankCache;
@@ -564,14 +572,11 @@
         return bank;
     }
 
-    // 对比两个题库数据是否一致（通过题目数量和ID集合）
     function isBankDataIdentical(localBank, cloudBank) {
         if (!localBank || !cloudBank) return false;
-        // 比较各题型数量
         if (localBank.single.length !== cloudBank.single.length) return false;
         if (localBank.multiple.length !== cloudBank.multiple.length) return false;
         if (localBank.judgment.length !== cloudBank.judgment.length) return false;
-        // 比较题目ID集合
         const getIds = (arr) => new Set(arr.map(q => q.id));
         const localSingleIds = getIds(localBank.single);
         const cloudSingleIds = getIds(cloudBank.single);
@@ -587,11 +592,9 @@
         const cloudJudgeIds = getIds(cloudBank.judgment);
         if (localJudgeIds.size !== cloudJudgeIds.size) return false;
         for (let id of localJudgeIds) if (!cloudJudgeIds.has(id)) return false;
-        
         return true;
     }
 
-    // 完整性校验并同步（如果数据不一致则下载云端数据覆盖缓存）
     async function validateAndSyncCache(bankId, silent = false) {
         if (bankIntegrityChecked[bankId]) return true;
         const storageKey = LOCAL_BANK_PREFIX + (bankId===1?BANK1_KEY:BANK2_KEY);
@@ -600,7 +603,6 @@
         if(stored) {
             try { localBank = JSON.parse(stored); } catch(e) {}
         }
-        // 如果没有本地缓存，不需要校验
         if (!localBank) {
             bankIntegrityChecked[bankId] = true;
             return true;
@@ -624,7 +626,6 @@
         
         const isIdentical = isBankDataIdentical(localBank, cloudBank);
         if (!isIdentical) {
-            // 数据不一致，用云端数据覆盖本地缓存
             document.getElementById('bgLoadMsg').innerHTML = `第${bankId}题库数据更新中...`;
             cloudBank._fullLoaded = true;
             bankCache[bankId] = cloudBank;
@@ -634,11 +635,18 @@
                 judgment: cloudBank.judgment, 
                 _fullLoaded: true 
             }));
-            // 如果当前正在使用此题库，刷新界面数据
             if (currentBankId === bankId && currentBank && !isTrialMode) {
                 currentBank = cloudBank;
                 if (practiceMode === 'all') {
                     practiceQuestions = [...currentBank[practiceType]];
+                    if(practiceIndex >= practiceQuestions.length && practiceQuestions.length > 0) practiceIndex = practiceQuestions.length-1;
+                    if(practiceIndex < 0) practiceIndex = 0;
+                    renderPracticeQuestion();
+                    document.getElementById('practice-progress').textContent = `题目 ${practiceIndex+1}/${practiceQuestions.length}`;
+                    document.getElementById('practice-jump').max = practiceQuestions.length;
+                } else if (practiceMode === 'wrong') {
+                    // 刷新错题库
+                    practiceQuestions = getWrongQuestionsByType(practiceType);
                     if(practiceIndex >= practiceQuestions.length && practiceQuestions.length > 0) practiceIndex = practiceQuestions.length-1;
                     if(practiceIndex < 0) practiceIndex = 0;
                     renderPracticeQuestion();
@@ -657,7 +665,6 @@
         return true;
     }
 
-    // 内部加载函数：优先从本地缓存读取，然后后台校验完整性
     async function loadBankDataInternal(bankId, silent = false) {
         const storageKey = LOCAL_BANK_PREFIX + (bankId===1?BANK1_KEY:BANK2_KEY);
         const stored = localStorage.getItem(storageKey);
@@ -666,14 +673,12 @@
             try {
                 bank = JSON.parse(stored);
                 bankCache[bankId] = bank;
-                // 后台异步校验完整性（不阻塞界面）
                 if (!bankIntegrityChecked[bankId]) {
                     validateAndSyncCache(bankId, silent).catch(console.warn);
                 }
                 return bank;
             } catch(e) {}
         }
-        // 无缓存，执行初次加载
         showLoading(true, '首次加载题库...');
         const mainKey = bankId===1?BANK1_KEY:BANK2_KEY;
         let batches = 0;
@@ -715,7 +720,6 @@
         return newBank;
     }
 
-    // 对外暴露的 loadBankData，试用模式下返回固定题库
     async function loadBankData(bankId) {
         if (isTrialMode) {
             const trialBank = await buildTrialBank();
@@ -731,18 +735,52 @@
         if (bankId === currentBankId) return;
         currentBankId = bankId;
         updateBankButtons();
+        
+        // 重新加载当前题库（会从缓存或云端获取）
         currentBank = null;
         currentBank = await loadBankData(currentBankId);
         if (!currentBank) { alert('题库加载失败'); return; }
-        const mainVisible = document.getElementById('main-section').style.display === 'block';
-        if (mainVisible) {
-            updatePracticeNav();
-            loadPracticeQuestions();
+        
+        // 刷新错题库数据（关键修复）
+        // 清除当前错题库引用，重新从新题库获取
+        if (practiceMode === 'wrong') {
+            practiceQuestions = getWrongQuestionsByType(practiceType);
+            practiceIndex = 0;
+            if(practiceQuestions.length === 0) {
+                // 如果新题库没有错题，自动切换到全部题库模式
+                practiceMode = 'all';
+                practiceQuestions = [...currentBank[practiceType]];
+                updatePracticeNav();
+            }
             renderPracticeQuestion();
-            generateExamPaper();
-            renderExamQuestion();
-            await syncWrongOnLogin();
+            document.getElementById('practice-progress').textContent = `题目 ${practiceIndex+1}/${practiceQuestions.length}`;
+            document.getElementById('practice-jump').max = practiceQuestions.length;
+        } else {
+            // 全部题库模式：刷新题目列表
+            practiceQuestions = [...currentBank[practiceType]];
+            if(practiceIndex >= practiceQuestions.length) practiceIndex = 0;
+            renderPracticeQuestion();
+            document.getElementById('practice-progress').textContent = `题目 ${practiceIndex+1}/${practiceQuestions.length}`;
+            document.getElementById('practice-jump').max = practiceQuestions.length;
         }
+        
+        // 刷新考试试卷
+        generateExamPaper();
+        renderExamQuestion();
+        
+        // 同步错题（如果用户已登录）
+        if (!isTrialMode && currentUser && currentUser.wrongCode) {
+            wrongCode = currentUser.wrongCode;
+            await syncWrongOnLogin();
+            if (practiceMode === 'wrong') {
+                practiceQuestions = getWrongQuestionsByType(practiceType);
+                practiceIndex = 0;
+                renderPracticeQuestion();
+            }
+        }
+        
+        // 更新界面显示
+        updatePracticeNav();
     }
 
     function updateBankButtons() {
@@ -755,7 +793,6 @@
         if(isTrialMode && mainBtn) mainBtn.disabled = true;
     }
 
-    // 考试计时器
     function startExamTimer() {
         if (examTimerInterval) clearInterval(examTimerInterval);
         examTimerInterval = setInterval(() => {
@@ -803,7 +840,6 @@
         resetExamTimer();
     }
 
-    // 练习模式函数（试用模式下限制题目范围）
     function loadPracticeQuestions() {
         if(!currentBank) return;
         if (practiceMode === 'all') {
@@ -988,7 +1024,6 @@
         generateExamPaper();
     }
 
-    // 登录/注册/试用
     window.switchAuthTab = function(tab) { 
         document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active')); 
         document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active')); 
@@ -1067,7 +1102,6 @@
 
     window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
 
-    // 捐助弹窗逻辑
     function showDonatePrompt() {
         const modal = document.getElementById('donatePromptModal');
         if(modal) modal.style.display = 'block';
@@ -1122,7 +1156,6 @@
         if(mainSwitch) mainSwitch.onclick = switchHandler;
     }
 
-    // 免责声明倒计时及启动
     let disclaimerCountdown = 10;
     const agreeBtn = document.getElementById('agreeBtn');
     const countdownSpan = document.getElementById('countdown');
