@@ -2,299 +2,877 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>河北水利三类人员题库·双题库云加载版--使用说明</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用操作说明 - 河北水利三类人员题库·通用版</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f0f5f5;
+            --card-bg: #ffffff;
+            --text: #1a3b3f;
+            --primary: #00897B;
+            --primary-dark: #00695C;
+            --primary-light: #B2DFDB;
+            --accent: #FF8F00;
+            --border: #d0e0e0;
+            --radius: 10px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --step-bg: #E0F2F1;
+            --step-border: #00897B;
+            --warning-bg: #FFF3E0;
+            --warning-border: #FF9800;
+            --info-bg: #E3F2FD;
+            --info-border: #1976D2;
+            --success-bg: #E8F5E9;
+            --success-border: #388E3C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
-            background: #eef5ee;
-            color: #1e3b2c;
-            padding: 30px 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1100px;
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            padding: 20px;
+            max-width: 920px;
             margin: 0 auto;
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 20px 40px rgba(0,32,0,0.08);
-            padding: 35px 40px;
         }
-        h1 {
-            font-size: 2rem;
-            color: #1e6f3f;
-            border-left: 6px solid #ff9800;
-            padding-left: 20px;
+        .header {
+            text-align: center;
+            padding: 30px 20px 24px;
+            background: linear-gradient(135deg, #00897B, #004D40);
+            color: white;
+            border-radius: var(--radius);
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 4px;
+            letter-spacing: 2px;
+        }
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.88;
+            font-weight: 300;
+        }
+        .section {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px 28px;
             margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
         }
-        h2 {
-            font-size: 1.6rem;
-            margin: 28px 0 16px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #d4e6d4;
-            color: #2c6e3c;
+        .section.warning {
+            border-left-color: var(--warning-border);
         }
-        h3 {
-            font-size: 1.25rem;
-            margin: 20px 0 12px 0;
-            color: #2d6a4f;
-            background: #eaf4ea;
+        .section.info {
+            border-left-color: var(--info-border);
+        }
+        .section.success {
+            border-left-color: var(--success-border);
+        }
+        .section h2 {
+            font-size: 20px;
+            color: #1a3b3f;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            font-size: 16px;
+            color: #2d5a5f;
+            margin: 18px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #d0e0e0;
+        }
+        .step {
+            background: var(--step-bg);
+            border: 1px solid var(--step-border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            position: relative;
+        }
+        .step .step-num {
             display: inline-block;
-            padding: 4px 16px;
-            border-radius: 30px;
+            background: var(--primary);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 8px;
+            flex-shrink: 0;
         }
-        p {
-            margin-bottom: 14px;
+        .step .step-title {
+            font-weight: bold;
+            color: #00695C;
+            font-size: 15px;
+        }
+        .step p {
+            margin-top: 6px;
+            margin-left: 34px;
+            color: #2d5a5f;
+            font-size: 14px;
+        }
+        .step ul {
+            margin-left: 50px;
+            margin-top: 4px;
+        }
+        .step ul li {
+            font-size: 14px;
+            color: #2d5a5f;
+            margin-bottom: 4px;
         }
         .note {
-            background: #fff8e7;
-            border-left: 5px solid #ffc107;
-            padding: 14px 20px;
-            margin: 20px 0;
-            border-radius: 14px;
+            background: #fff9c4;
+            border: 1px solid #f9a825;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13px;
+            color: #5d4037;
+        }
+        .note strong {
+            color: #e65100;
         }
         .tip {
-            background: #e3f2fd;
-            border-left: 5px solid #2196f3;
-            padding: 12px 18px;
-            border-radius: 14px;
-            margin: 15px 0;
+            background: var(--info-bg);
+            border: 1px solid #64B5F6;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13px;
+            color: #0d47a1;
         }
-        .warning {
-            background: #ffefef;
-            border-left: 5px solid #f44336;
-            padding: 12px 18px;
-            border-radius: 14px;
-            margin: 15px 0;
+        .tip strong {
+            color: #0d47a1;
         }
-        .badge {
-            background: #1e6f3f;
-            color: white;
-            font-size: 0.75rem;
-            padding: 3px 10px;
-            border-radius: 30px;
+        .warning-box {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13px;
+            color: #e65100;
+        }
+        .warning-box strong {
+            color: #bf360c;
+        }
+        .success-box {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13px;
+            color: #1b5e20;
+        }
+        .btn-demo {
             display: inline-block;
-            margin-right: 10px;
+            background: #e8e8e8;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+            padding: 2px 12px;
+            font-family: 'Microsoft YaHei', sans-serif;
+            font-size: 13px;
+            color: #333;
+            white-space: nowrap;
         }
-        ul, ol {
-            margin-left: 28px;
-            margin-bottom: 18px;
+        .btn-demo.green {
+            background: #00897B;
+            color: white;
+            border-color: #00695C;
         }
-        li {
-            margin: 8px 0;
+        .btn-demo.orange {
+            background: #FF8F00;
+            color: white;
+            border-color: #E68900;
         }
-        hr {
-            margin: 25px 0;
-            border: none;
-            border-top: 1px solid #d0e2d0;
+        .btn-demo.blue {
+            background: #1976D2;
+            color: white;
+            border-color: #1565C0;
         }
-        .footer {
-            margin-top: 40px;
+        .btn-demo.red {
+            background: #E53935;
+            color: white;
+            border-color: #C62828;
+        }
+        .btn-demo.purple {
+            background: #7B1FA2;
+            color: white;
+            border-color: #6A1B9A;
+        }
+        .btn-demo.teal {
+            background: #00897B;
+            color: white;
+            border-color: #00695C;
+        }
+        .btn-demo.grey {
+            background: #78909C;
+            color: white;
+            border-color: #546E7A;
+        }
+        .btn-demo.pink {
+            background: #D81B60;
+            color: white;
+            border-color: #AD1457;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        table th,
+        table td {
+            padding: 10px 14px;
+            border: 1px solid #d0e0e0;
             text-align: center;
-            font-size: 0.85rem;
-            color: #6c8b75;
-            border-top: 1px solid #e2efe2;
-            padding-top: 25px;
         }
-        .grid-2 {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+        table th {
+            background: #E0F2F1;
+            font-weight: bold;
+            color: #004D40;
+        }
+        table tbody tr:nth-child(odd) {
+            background: #f5fafa;
+        }
+        .toc {
+            background: #f5fafa;
+            border: 1px solid #d0e0e0;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 25px;
+        }
+        .toc h3 {
+            margin-top: 0;
+            border: none;
+            font-size: 18px;
+            color: #004D40;
+        }
+        .toc ol {
+            margin-left: 20px;
+            color: #1a3b3f;
+            font-size: 14px;
+        }
+        .toc ol li {
+            margin-bottom: 6px;
+        }
+        .toc ol li a {
+            color: #00695C;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .toc ol li a:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #d0e0e0;
             margin: 20px 0;
         }
-        .card {
-            background: #fefef7;
-            border-radius: 20px;
-            padding: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border: 1px solid #e2f0e2;
-            flex: 1;
-            min-width: 240px;
+        .badge {
+            display: inline-block;
+            background: #00897B;
+            color: white;
+            font-size: 11px;
+            padding: 1px 10px;
+            border-radius: 30px;
+            margin-left: 6px;
+            vertical-align: middle;
         }
-        .card strong {
-            color: #d97706;
-            font-size: 1.1rem;
-        }
-        code {
-            background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.9em;
-        }
-        .new-feature {
-            background: #d4edda;
-            border-left: 4px solid #28a745;
-            padding: 8px 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
-        @media (max-width: 700px) {
-            .container { padding: 20px; }
-            h1 { font-size: 1.6rem; }
-            h2 { font-size: 1.3rem; }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .section {
+                padding: 18px 14px;
+            }
+            .step p,
+            .step ul {
+                margin-left: 0;
+            }
+            .step ul {
+                margin-left: 20px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>📖 河北水利三类人员题库 · 双题库云加载版 使用说明</h1>
-    <p>欢迎使用<strong>河北水利三类人员题库系统</strong>（双题库云端版）。本系统面向水利施工企业主要负责人、项目负责人和专职安全生产管理人员，提供大量单选题、多选题、判断题的在线练习与模拟考试，支持错题本云端同步、双题库自由切换，完全免费使用。</p>
 
-    <div class="note">
-        ⚠️ <strong>阅读提示</strong>：首次进入系统前，请认真阅读免责声明及捐助说明。系统会弹出免责声明并倒计时10秒，同意后方可继续。使用说明本身不包含免责条款，请以系统内弹窗为准。
+    <div class="header">
+        <h1>📖 使用操作说明</h1>
+        <p class="subtitle">河北水利三类人员题库 · 双题库云加载版</p>
     </div>
 
-    <h2>📑 快速导航</h2>
-    <div class="grid-2">
-        <div class="card"><strong>1. 账号注册/登录</strong><br>使用邮箱、手机号和库码注册，管理员审核通过后即可使用完整功能。</div>
-        <div class="card"><strong>2. 练习模式</strong><br>按题型（单选/多选/判断）刷题，支持“全部题库”或“错题库”范围。</div>
-        <div class="card"><strong>3. 考试模式</strong><br>随机抽题组卷，<span class="badge" style="background:#d9534f;">新</span>倒计时2.5小时，自动交卷。</div>
-        <div class="card"><strong>4. 错题库管理</strong><br>答错的题目自动收入错题库，可反复练习、云端备份、导入导出。</div>
-        <div class="card"><strong>5. 双题库切换</strong><br>系统内置两套独立题库，随时切换，错题数据分开存储。</div>
-        <div class="card"><strong>6. 捐助支持</strong><br>自愿捐助，弹出说明弹窗（含5秒倒计时），确认后显示捐助图片。</div>
+    <!-- ======== 目录 ======== -->
+    <div class="toc">
+        <h3>📋 目录</h3>
+        <ol>
+            <li><a href="#s1">首次使用 —— 注册账号</a></li>
+            <li><a href="#s2">登录系统</a></li>
+            <li><a href="#s3">免注册试用（无需账号）</a></li>
+            <li><a href="#s4">切换题库（1库 / 2库）</a></li>
+            <li><a href="#s5">练习模式 —— 刷题练习</a></li>
+            <li><a href="#s6">错题库 —— 专项攻克薄弱点</a></li>
+            <li><a href="#s7">错题库管理（刷新 / 备份 / 导出 / 导入）</a></li>
+            <li><a href="#s8">考试模式 —— 模拟正式考试</a></li>
+            <li><a href="#s9">查看考试结果与错题回看</a></li>
+            <li><a href="#s10">捐助与退出</a></li>
+        </ol>
     </div>
 
-    <h2>🔐 一、账号注册与登录</h2>
-    <h3>1.1 注册账号</h3>
-    <ul>
-        <li><strong>邮箱</strong>：登录账号，请填写真实邮箱（用于接收审核通知）。</li>
-        <li><strong>手机号</strong>：将自动成为您的专属“错题库码”，用于云端备份错题。</li>
-        <li><strong>密码</strong>：至少6位，请妥善保管。</li>
-        <li><strong>库码</strong>：用户分组标识（如单位代码），注册后不可更改。不同库码的用户数据互相隔离。</li>
-    </ul>
-    <p>点击「提交注册申请」后，请手动发送邮件至管理员邮箱（页面已自动填充邮件内容），管理员审核通过后即可登录。</p>
+    <!-- ======== 第1节：注册 ======== -->
+    <div class="section" id="s1">
+        <h2>一、首次使用 —— 注册账号</h2>
 
-    <h3>1.2 登录系统</h3>
-    <ul>
-        <li>输入注册时使用的<strong>邮箱、密码、库码</strong>，点击「登录」。</li>
-        <li>若提示“用户不存在”，请检查库码是否正确，或等待管理员审核。</li>
-        <li>登录成功后，顶部用户栏会显示您的邮箱和错题码（即注册手机号）。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">打开系统网页</span>
+            <p>在浏览器中打开系统网址，您将看到登录/注册界面。</p>
+        </div>
 
-    <h3>1.3 试用模式（已优化）</h3>
-    <div class="new-feature">✨ <strong>全新试用体验</strong>：点击「免注册试用」后，您将获得固定范围的题目（题库1的单选题前100道、多选题前20道、判断题前20道），可自由练习和模拟考试，无时间限制。但错题库、云端备份、切换题库等功能将被禁用。</div>
-    <ul>
-        <li><strong>练习模式</strong>：仅能查看和作答前100道单选、20道多选、20道判断，超出范围（如跳转到第101题）会弹出提示“使用更多请正式注册”，并自动返回注册界面。</li>
-        <li><strong>考试模式</strong>：同样使用固定题目范围组卷，考试倒计时<strong>2小时30分钟</strong>（与其他用户相同），时间到自动交卷。</li>
-        <li><strong>醒目“去注册”按钮</strong>：试用模式下顶部用户栏会出现一个闪烁的“✨ 去注册 ✨”按钮，点击直接跳转至注册表单，方便您快速转为正式用户。</li>
-        <li>试用结束后，您注册登录即可获得全部题库权限和错题库功能。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">切换到注册面板</span>
+            <p>点击页面上方的 <span class="btn-demo">注册</span> 标签，切换到注册表单。</p>
+        </div>
 
-    <h2>🖥️ 二、主界面功能分区</h2>
-    <p>登录或试用后进入主界面，包含以下区域：</p>
-    <ul>
-        <li><strong>顶部用户栏</strong>：显示邮箱、错题码、“退出”、“捐助作者”、“切换题库”按钮（试用模式下“切换题库”禁用，并显示“去注册”按钮）。</li>
-        <li><strong>模式标签</strong>：「📘 练习模式」与「📝 考试模式」，点击可切换。</li>
-        <li><strong>错题库管理区</strong>：显示错题码，提供“刷新错题库”、“备份到云端”、“导出/导入错题库”功能（试用模式下全部禁用）。</li>
-        <li><strong>题型筛选栏</strong>：单选、多选、判断，以及“全部题库/错题库”切换（试用模式下“错题库”不可用）。</li>
-        <li><strong>题目区域</strong>：显示当前题目、选项、确认反馈、上下题跳转及题号跳转。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">填写注册信息</span>
+            <ul>
+                <li><strong>邮箱(用户名)</strong> — 输入您常用的电子邮箱地址（将作为登录用户名）</li>
+                <li><strong>手机号</strong> — 输入11位手机号码（将自动成为您的“错题库码”）</li>
+                <li><strong>密码</strong> — 设置登录密码（至少6位）</li>
+                <li><strong>确认密码</strong> — 再次输入相同密码</li>
+                <li><strong>库码</strong> — 输入管理员分配给您的库码（注册后不可更改）</li>
+            </ul>
+        </div>
 
-    <h2>✏️ 三、练习模式（日常刷题）</h2>
-    <h3>3.1 选择题目范围</h3>
-    <ul>
-        <li><strong>全部题库</strong>：使用当前题库中所有已加载的题目（正式用户完整题库，试用用户仅限固定范围）。</li>
-        <li><strong>错题库</strong>：仅显示您之前答错的题目（需登录且设置了错题码，试用用户不可用）。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">4</span>
+            <span class="step-title">提交注册申请</span>
+            <p>点击 <span class="btn-demo green">提交注册申请</span> 按钮。系统会自动打开您电脑上的邮件客户端，请将显示的邮箱和手机号发送到指定邮箱等待审核。</p>
+        </div>
 
-    <h3>3.2 按题型刷题</h3>
-    <p>点击「单选」「多选」「判断」按钮，可快速过滤题型，题目数量会显示在进度条中。试用用户每种题型数量分别显示为 ≤100、≤20、≤20。</p>
+        <div class="note">
+            <strong>⚠️ 重要：</strong>提交申请后，请务必将您的<strong>邮箱 + 手机号</strong>发送至 <strong>670656216@qq.com</strong>，等待管理员审核通过后方可登录使用。不同库码的用户数据互相隔离。
+        </div>
+    </div>
 
-    <h3>3.3 作答与确认</h3>
-    <ul>
-        <li>单击选项即可选中（多选题可多次点击选择/取消）。</li>
-        <li>点击「确认」后，系统会判断对错并显示正确答案。</li>
-        <li><strong>自动收录错题</strong>：登录状态下，在“全部题库”中答错的题目会自动加入错题库；在“错题库”模式下答对，则会从错题库中移除该题（试用用户无此功能）。</li>
-        <li>使用「上一题」「下一题」或输入题号跳转，可自由切换题目。试用用户若尝试跳转到超过限制范围的题号，会提示注册并返回登录界面。</li>
-    </ul>
-    <div class="tip">💡 提示：错题库可帮助您集中攻克薄弱知识点，反复练习直到掌握全部错题。</div>
+    <!-- ======== 第2节：登录 ======== -->
+    <div class="section" id="s2">
+        <h2>二、登录系统</h2>
 
-    <h2>📝 四、考试模式（模拟自测）</h2>
-    <h3>4.1 抽题规则与倒计时</h3>
-    <ul>
-        <li>从当前题库中随机抽取：单选题最多100道、多选题最多20道、判断题最多20道（实际数量取决于题库存量）。</li>
-        <li><strong>考试时间限制</strong>：<span class="badge" style="background:#d9534f;">2小时30分钟</span>（150分钟），顶部会显示剩余时间，倒计时结束系统自动交卷并计分。</li>
-        <li>重新抽题时，倒计时重置为2.5小时。</li>
-        <li>试用用户的考试同样适用固定题目范围（前100/20/20），抽题时不会超出范围，倒计时规则相同。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">切换到登录面板</span>
+            <p>确保当前显示的是 <span class="btn-demo">登录</span> 标签页（默认为登录状态）。</p>
+        </div>
 
-    <h3>4.2 作答与提交</h3>
-    <ul>
-        <li>单击选项即可选中（多选可多次点击）。</li>
-        <li>建议每道题点击「确认」锁定答案，避免误改（也可不确认，再次进入该题时可修改）。</li>
-        <li>顶部提供「单选题」「多选题」「判断题」「未答题」快速筛选，方便检查漏题。</li>
-        <li>完成全部题目或时间耗尽后，系统自动计分并显示总分及各题型得分（单选0.5分/道，多选2分/道，漏选按0.5分/个计，最高1.5分，判断0.5分/道）。</li>
-        <li>交卷后，做错的题目会自动存入错题库（需登录且有错题码，试用用户不会收录）。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">填写登录信息</span>
+            <ul>
+                <li><strong>邮箱</strong> — 输入您注册时使用的邮箱</li>
+                <li><strong>密码</strong> — 输入您设置的密码</li>
+                <li><strong>库码</strong> — 输入管理员分配给您的库码（输入时不显示明文，这是正常的安全设计）</li>
+            </ul>
+        </div>
 
-    <h3>4.3 错题回看</h3>
-    <p>考试结果弹窗中点击「错题回看」，或在考试模式中点击「错题回看」按钮，可查看本次考试中所有错题的题目、您的答案及正确答案，便于针对性复习。</p>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">点击登录</span>
+            <p>点击 <span class="btn-demo green">登录</span> 按钮。系统将验证您的身份，并自动加载题库数据。</p>
+        </div>
 
-    <h2>📚 五、错题库与云端同步</h2>
-    <h3>5.1 错题码</h3>
-    <p>注册时填写的<strong>手机号</strong>即为您的错题码。登录后，系统会自动使用该码关联云端错题数据库。错题码不支持手动修改。</p>
+        <div class="tip">
+            <strong>💡 提示：</strong>首次登录时，系统需要从云端下载题库数据，会显示加载进度条。下载完成后即可正常使用。再次登录时，系统会优先使用本地已缓存的数据，加载速度更快。
+        </div>
 
-    <h3>5.2 本地错题库</h3>
-    <p>所有错题记录会保存在您浏览器的本地存储中，即使切换设备也可以通过「备份到云端」和「刷新错题库」进行跨设备同步。</p>
+        <div class="note">
+            <strong>⚠️ 注意：</strong>如果提示"用户不存在"或"账号或密码错误"，请检查您的邮箱、密码和库码是否填写正确。
+        </div>
+    </div>
 
-    <h3>5.3 备份与恢复</h3>
-    <ul>
-        <li><strong>备份到云端</strong>：将当前错题库上传至云端服务器（使用您的错题码作为存储Key）。</li>
-        <li><strong>刷新错题库</strong>：从云端拉取最新的错题记录并合并到本地。</li>
-        <li><strong>导出错题库</strong>：将错题列表导出为JSON文件，便于本地保存或分享。</li>
-        <li><strong>导入错题库</strong>：选择之前导出的JSON文件，合并到当前错题库中。</li>
-    </ul>
-    <div class="warning">⚠️ 注意：云端备份需要网络连接，且免费数据库有容量限制，建议定期导出本地保存。试用用户无法使用错题库相关功能。</div>
+    <!-- ======== 第3节：试用 ======== -->
+    <div class="section" id="s3">
+        <h2>三、免注册试用（无需账号）</h2>
 
-    <h2>🔄 六、双题库切换</h2>
-    <p>本系统内置两套完整题库（第1题库 / 第2题库），可通过「切换题库」按钮随时切换（试用用户无法切换）。切换后：</p>
-    <ul>
-        <li>练习模式中的题目将来自新题库。</li>
-        <li>考试模式会自动重新生成新试卷，倒计时重置。</li>
-        <li>错题库会根据当前题库分别存储（不同题库的错题互相独立）。</li>
-    </ul>
-    <p>当前使用的题库编号会显示在按钮上，方便识别。</p>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击试用按钮</span>
+            <p>在登录界面，直接点击 <span class="btn-demo orange">免注册试用 (固定题目)</span> 按钮。</p>
+        </div>
 
-    <h2>❤️ 七、捐助作者</h2>
-    <p>本系统为非营利性学习工具，所有题目均来自公开资料。若您觉得系统对您有帮助，可自愿点击「捐助作者」按钮支持运维开发。点击后会先弹出<strong>捐助说明弹窗（含5秒倒计时）</strong>，倒计时结束后按钮变为可点击，确认后才会显示捐助图片。</p>
-    <ul>
-        <li>打赏金额任意，完全自愿，不换取任何特权或额外功能。</li>
-        <li>打赏资金仅用于服务器、域名及开发维护，与题目版权无关。</li>
-    </ul>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">开始试用</span>
+            <p>系统将自动进入主界面，试用模式下固定使用<strong>题库1</strong>的以下题目：</p>
+            <ul>
+                <li>单选题：前100道</li>
+                <li>多选题：前20道</li>
+                <li>判断题：前20道</li>
+            </ul>
+            <p>您可以在练习模式和考试模式中正常使用这些固定题目。</p>
+        </div>
 
-    <h2>⚖️ 八、免责声明重要提示</h2>
-    <div class="warning">
-        <strong>使用本系统即代表您已阅读并同意以下条款：</strong>
-        <ul style="margin-top: 8px;">
-            <li>题目及解析来源于网络，不保证绝对准确、完整或符合最新考纲，请自行核对权威教材。</li>
-            <li>因使用本系统导致的考试失利或其他损失，系统及开发者不承担责任。</li>
-            <li>所有题目著作权归原作者或出版机构所有，本系统不主张原创权利。</li>
-            <li>若权利人认为侵权，请联系邮箱 670656216@qq.com，我们将在看到邮件后尽快联系您进行处理。</li>
+        <div class="warning-box">
+            <strong>⚠️ 试用限制：</strong>试用模式下，<strong>错题库功能被禁用</strong>（无法记录错题），且<strong>不能切换题库</strong>。如需完整体验所有功能，请注册并登录。
+        </div>
+
+        <div class="tip">
+            <strong>💡 提示：</strong>试用模式下，如果您尝试查看超出范围的题目（如第101道单选题），系统会提示您去注册。
+        </div>
+    </div>
+
+    <!-- ======== 第4节：切换题库 ======== -->
+    <div class="section" id="s4">
+        <h2>四、切换题库（1库 / 2库）</h2>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">登录后切换</span>
+            <p>登录成功后，在顶部用户栏右侧，找到 <span class="btn-demo purple">切换题库</span> 按钮（显示为 <strong>1库</strong> 或 <strong>2库</strong>）。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">点击切换</span>
+            <p>点击该按钮，系统会自动切换到另一个题库，并重新加载题目数据。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">查看当前题库</span>
+            <p>按钮上会显示当前使用的题库编号（<strong>1库</strong> 或 <strong>2库</strong>），方便您识别。</p>
+        </div>
+
+        <div class="tip">
+            <strong>💡 提示：</strong>切换题库后，练习模式中的题目列表、考试模式的试卷都会立即更新。不同题库的<strong>错题库数据分开存储</strong>，互不影响。
+        </div>
+
+        <div class="note">
+            <strong>⚠️ 注意：</strong>试用模式下<strong>不能切换题库</strong>，该按钮会被禁用。
+        </div>
+    </div>
+
+    <!-- ======== 第5节：练习模式 ======== -->
+    <div class="section" id="s5">
+        <h2>五、练习模式 —— 刷题练习</h2>
+
+        <h3>5.1 选择题目类型</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">选择题型</span>
+            <p>在练习面板中，点击题型按钮切换题目类型：</p>
+            <ul>
+                <li><span class="btn-demo">单选</span> —— 练习单选题</li>
+                <li><span class="btn-demo">多选</span> —— 练习多选题</li>
+                <li><span class="btn-demo">判断</span> —— 练习判断题</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">选择题库范围</span>
+            <p>点击题库按钮切换题目来源：</p>
+            <ul>
+                <li><span class="btn-demo green">全部题库</span> —— 练习当前题库的全部题目</li>
+                <li><span class="btn-demo orange">错题库</span> —— 只练习之前做错的题目</li>
+            </ul>
+        </div>
+
+        <h3>5.2 答题操作</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">选择答案</span>
+            <p>用鼠标点击您认为正确的选项。对于<strong>多选题</strong>，可以点击多个选项（再次点击可取消选中）。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">确认答案</span>
+            <p>选择完成后，点击 <span class="btn-demo green">确认</span> 按钮。系统会立即显示您的答案是否正确。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">查看反馈</span>
+            <ul>
+                <li><strong>回答正确</strong>：显示绿色提示"回答正确！"</li>
+                <li><strong>回答错误</strong>：显示红色提示，并给出正确答案</li>
+            </ul>
+        </div>
+
+        <h3>5.3 切换题目</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">使用导航按钮</span>
+            <p>点击 <span class="btn-demo green">上一题</span> 或 <span class="btn-demo green">下一题</span> 切换题目。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">快速跳转</span>
+            <p>在"跳转"输入框中输入题号，点击 <span class="btn-demo green">跳转</span>，可直接跳转到指定题目。</p>
+        </div>
+
+        <div class="tip">
+            <strong>💡 自动记录：</strong>在"全部题库"中做错的题目，系统会自动加入您的错题库；在"错题库"中做对的题目，系统会自动从错题库中移除。
+        </div>
+    </div>
+
+    <!-- ======== 第6节：错题库 ======== -->
+    <div class="section" id="s6">
+        <h2>六、错题库 —— 专项攻克薄弱点</h2>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">进入错题库</span>
+            <p>在练习面板中，点击 <span class="btn-demo orange">错题库</span> 按钮，切换到错题库模式。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">练习错题</span>
+            <p>选择单选/多选/判断题型，系统只会显示您之前做错的题目。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">攻克错题</span>
+            <p>认真作答错题。当您答对一道错题时，该题会自动从错题库中移除。</p>
+        </div>
+
+        <div class="tip">
+            <strong>💡 提示：</strong>当错题库中某个题型的题目全部被攻克后，系统会提示"恭喜！该题型错题已全部掌握"，并自动切换回全部题库模式。
+        </div>
+
+        <div class="note">
+            <strong>⚠️ 注意：</strong>试用模式下<strong>不能使用错题库</strong>，相关按钮会被禁用。
+        </div>
+    </div>
+
+    <!-- ======== 第7节：错题库管理 ======== -->
+    <div class="section" id="s7">
+        <h2>七、错题库管理（刷新 / 备份 / 导出 / 导入）</h2>
+
+        <h3>7.1 设置错题库码</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">输入错题库码</span>
+            <p>在练习面板的"错题库码"输入框中，输入您的手机号（注册时填写的手机号），系统将使用该码关联云端错题数据库。</p>
+        </div>
+        <div class="tip">
+            <strong>💡 提示：</strong>登录后，系统会自动填入您注册时的手机号，无需手动输入。
+        </div>
+
+        <h3>7.2 刷新错题库</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击刷新按钮</span>
+            <p>点击 <span class="btn-demo blue">刷新错题库</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">同步云端数据</span>
+            <p>系统会从云端拉取最新的错题记录，并与本地数据合并。完成后会提示"错题库已刷新"。</p>
+        </div>
+
+        <h3>7.3 备份到云端</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击备份按钮</span>
+            <p>点击 <span class="btn-demo teal">备份到云端</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">等待完成</span>
+            <p>系统会弹出备份进度窗口，自动将您的错题库数据上传到云端。进度条走完后显示"备份完成"。</p>
+        </div>
+        <div class="tip">
+            <strong>💡 提示：</strong>系统在您<strong>退出账号</strong>时会自动执行一次云端备份，确保错题数据不丢失。
+        </div>
+
+        <h3>7.4 导出错题库到电脑</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击导出按钮</span>
+            <p>点击 <span class="btn-demo purple">导出错题库</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">保存文件</span>
+            <p>浏览器会自动下载一个名为 <strong>wrong_items_bankX_日期.json</strong> 的文件，请保存到您电脑上安全的位置。</p>
+        </div>
+
+        <h3>7.5 导入错题库恢复数据</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击导入按钮</span>
+            <p>点击 <span class="btn-demo pink">导入错题库</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">选择文件</span>
+            <p>在弹出的文件选择窗口中，找到您之前导出的 <strong>wrong_items_bankX_日期.json</strong> 文件并打开。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">导入成功</span>
+            <p>系统提示"导入成功！共导入 N 条错题记录"，您的错题库数据已恢复。</p>
+        </div>
+        <div class="warning-box">
+            <strong>⚠️ 注意：</strong>导入操作会<strong>合并</strong>当前的错题库数据，不会覆盖原有数据。导入后如需同步到云端，请点击"备份到云端"。
+        </div>
+    </div>
+
+    <!-- ======== 第8节：考试模式 ======== -->
+    <div class="section" id="s8">
+        <h2>八、考试模式 —— 模拟正式考试</h2>
+
+        <div class="warning-box">
+            <strong>⚠️ 前提条件：</strong>考试模式需要题库数据<strong>完全加载</strong>后方可使用。如果题库还在后台加载中，点击考试标签会提示还需等待。
+        </div>
+
+        <h3>8.1 开始考试</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">切换到考试模式</span>
+            <p>点击页面上方的 <span class="btn-demo">📝 考试模式</span> 标签。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">了解考试规则</span>
+            <p>系统自动随机抽取题目（试用模式下使用固定题目），题型和分值如下：</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>题型</th>
+                    <th>题目数量</th>
+                    <th>每题分值</th>
+                    <th>计分规则</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>单选题</td>
+                    <td>最多100道</td>
+                    <td>0.5分</td>
+                    <td>选对得分</td>
+                </tr>
+                <tr>
+                    <td>多选题</td>
+                    <td>最多20道</td>
+                    <td>2分</td>
+                    <td>全部选对得2分，漏选按每个正确选项0.5分计（最高1.5分），错选不得分</td>
+                </tr>
+                <tr>
+                    <td>判断题</td>
+                    <td>最多20道</td>
+                    <td>0.5分</td>
+                    <td>选对得分</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            <strong>📌 考试时间：</strong>考试模式设有<strong>2小时30分钟</strong>倒计时，时间结束后系统会自动交卷并计分。
+        </div>
+
+        <h3>8.2 答题操作</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">选择答案</span>
+            <p>点击您认为正确的选项（多选题可点击多个）。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">确认答案</span>
+            <p>选好后点击 <span class="btn-demo green">确认</span> 按钮。确认后该题答案将<strong>锁定</strong>，无法修改。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">继续答题</span>
+            <p>使用 <span class="btn-demo green">上一题</span> / <span class="btn-demo green">下一题</span> 按钮切换题目，依次完成所有题目。</p>
+        </div>
+
+        <h3>8.3 筛选与提交</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">筛选题目</span>
+            <p>可以使用筛选按钮快速定位：</p>
+            <ul>
+                <li><span class="btn-demo">单选题</span> —— 只看单选题</li>
+                <li><span class="btn-demo">多选题</span> —— 只看多选题</li>
+                <li><span class="btn-demo">判断题</span> —— 只看判断题</li>
+                <li><span class="btn-demo">未答题</span> —— 只看还没作答的题目</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">提交试卷</span>
+            <p>完成所有题目后（或时间到），点击 <span class="btn-demo green">交卷</span> 按钮。系统会弹出确认框，点击 <span class="btn-demo green">交卷</span> 确认提交。</p>
+        </div>
+
+        <h3>8.4 重新抽题</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击重新抽题</span>
+            <p>点击 <span class="btn-demo orange">重新抽题</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">确认清空进度</span>
+            <p>系统会弹出确认框"确认重新抽题？当前进度将清空"，点击 <span class="btn-demo green">是</span> 确认。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">开始新试卷</span>
+            <p>系统会重新随机抽取题目，生成一套全新的试卷，考试计时器同时重置。</p>
+        </div>
+    </div>
+
+    <!-- ======== 第9节：查看结果 ======== -->
+    <div class="section" id="s9">
+        <h2>九、查看考试结果与错题回看</h2>
+
+        <h3>9.1 查看成绩</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">查看考试结果弹窗</span>
+            <p>交卷后自动弹出成绩窗口，显示：</p>
+            <ul>
+                <li>单选得分、多选得分、判断得分</li>
+                <li>总分（满分100分）</li>
+            </ul>
+        </div>
+
+        <h3>9.2 错题回看</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击错题回看</span>
+            <p>在成绩弹窗中点击 <span class="btn-demo orange">错题回看</span> 按钮，或在考试模式中点击 <span class="btn-demo orange">错题回看</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">查看错题详情</span>
+            <p>弹窗中列出本次考试所有做错的题目，显示：</p>
+            <ul>
+                <li>题号及题目内容</li>
+                <li>您选择的答案</li>
+                <li>正确答案</li>
+            </ul>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">关闭弹窗</span>
+            <p>点击 <span class="btn-demo green">关闭</span> 按钮关闭错题弹窗。</p>
+        </div>
+
+        <h3>9.3 重新考试</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击重新考试</span>
+            <p>在成绩弹窗中点击 <span class="btn-demo green">重新考试</span> 按钮，系统会重新抽取题目，开始新一轮考试。</p>
+        </div>
+
+        <div class="tip">
+            <strong>💡 提示：</strong>考试中做错的题目会自动加入您的错题库（登录状态下），方便后续在练习模式中专项攻克。
+        </div>
+    </div>
+
+    <!-- ======== 第10节：捐助与退出 ======== -->
+    <div class="section" id="s10">
+        <h2>十、捐助与退出</h2>
+
+        <h3>10.1 捐助作者</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击捐助按钮</span>
+            <p>点击页面上的 <span class="btn-demo pink">❤️ 捐助作者</span> 按钮（登录界面和主界面均有）。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">阅读捐助说明</span>
+            <p>系统弹出"捐助/打赏说明"弹窗，包含5秒倒计时，请认真阅读。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">确认捐助</span>
+            <p>倒计时结束后，点击 <span class="btn-demo orange">我已阅读并自愿打赏</span> 按钮。</p>
+        </div>
+        <div class="step">
+            <span class="step-num">4</span>
+            <span class="step-title">查看捐助图片</span>
+            <p>系统显示"🙏 感谢支持"弹窗，展示捐助二维码或图片。</p>
+        </div>
+        <div class="tip">
+            <strong>💡 提示：</strong>捐助完全自愿，不换取任何额外功能或特权。打赏资金仅用于服务器及开发维护。
+        </div>
+
+        <h3>10.2 退出账号</h3>
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">点击退出按钮</span>
+            <p>在顶部用户栏右侧，点击 <span class="btn-demo red">🚪 退出</span> 按钮（电脑端显示文字，手机端显示图标）。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">自动备份错题</span>
+            <p>系统会自动将您的错题库数据备份到云端（如果已设置错题库码），请稍等片刻。</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">返回登录界面</span>
+            <p>备份完成后，页面自动刷新，回到登录界面。</p>
+        </div>
+
+        <div class="tip">
+            <strong>💡 提示：</strong>如果只是临时关闭浏览器，下次打开时系统会自动恢复您上次的练习状态（包括题型、题目位置和当前使用的题库编号）。
+        </div>
+    </div>
+
+    <!-- ======== 底部 ======== -->
+    <hr class="divider">
+
+    <div class="section info">
+        <h2>📞 需要帮助？</h2>
+        <p>如果在使用过程中遇到任何问题：</p>
+        <ul>
+            <li>点击登录页面或主界面的 <span class="btn-demo blue">📖 使用说明</span> 按钮查看本帮助文档</li>
+            <li>联系管理员邮箱：<strong>670656216@qq.com</strong></li>
         </ul>
     </div>
-    <p>首次进入系统时，会强制弹出免责声明并倒计时10秒，只有点击「我已阅读-继续使用」后方可正常使用。点击「取消」将无法进入系统。</p>
 
-    <h2>❓ 九、常见问题解答（FAQ）</h2>
-    <ul>
-        <li><strong>Q：为什么登录时提示“用户库读取失败”？</strong><br>A：请检查库码是否正确，且该库码下确实存在您的账号。新注册账号需管理员审核通过。</li>
-        <li><strong>Q：试用模式下可以看到全部题库吗？</strong><br>A：不能。试用模式只开放题库1的单选题前100道、多选题前20道、判断题前20道，超出会提示注册。</li>
-        <li><strong>Q：考试倒计时可以暂停吗？</strong><br>A：不可以。倒计时从生成试卷开始持续运行，切换题目或过滤题型都不会停止，时间到自动交卷。</li>
-        <li><strong>Q：切换题库后错题会丢失吗？</strong><br>A：不会，不同题库的错题分开存储，互不影响。切换回原题库错题依然存在。</li>
-        <li><strong>Q：题库加载很慢怎么办？</strong><br>A：系统采用分批次加载，优先加载前50道题即可开始练习，剩余题目会在后台静默加载，请耐心等待。</li>
-        <li><strong>Q：试用模式下如何转为正式用户？</strong><br>A：点击顶部闪烁的“✨ 去注册 ✨”按钮，或直接退出后重新注册登录。</li>
-    </ul>
-
-    <div class="tip">
-        💡 如需更详细的技术支持，可通过邮箱 <strong>670656216@qq.com</strong> 联系管理员。
+    <div style="text-align:center; font-size:12px; color:#78909C; margin-top:20px; padding:10px 0;">
+        © 2025 河北水利三类人员题库 · 双题库云加载版 | 公益学习平台
     </div>
 
-    <hr>
-    <div class="footer">
-        <p>© 2025 河北水利三类人员题库 · 双题库云加载版 | 公益学习平台 | 持续更新</p>
-        <p style="font-size: 0.8rem;">本系统不收集用户敏感信息，请放心使用。</p>
-    </div>
-</div>
 </body>
 </html>
