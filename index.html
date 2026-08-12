@@ -611,14 +611,15 @@
         <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
     </div>
     <form id="login-form" class="auth-form active" onsubmit="handleLogin(event)">
-        <div class="form-group"><label>邮箱</label><input type="email" id="login-email" required placeholder="注册邮箱"></div>
-        <div class="form-group"><label>密码</label><input type="password" id="login-password" required placeholder="密码"></div>
-        <div class="form-group"><label>库码</label><input type="password" id="login-lib-code" required placeholder="请输入库码"></div>
-        <button type="button" class="btn-switch" id="auth-switch-bank-btn">切换题库 (当前：第1题库)</button>
-        <button type="submit" class="btn-primary">登录</button>
-        <button type="button" class="btn-secondary" onclick="startTrial()">免注册试用 (固定题目)</button>
-        <div id="login-message" class="message"></div>
-    </form>
+    <div class="form-group"><label>邮箱</label><input type="email" id="login-email" required placeholder="注册邮箱"></div>
+    <div class="form-group"><label>密码</label><input type="password" id="login-password" required placeholder="密码"></div>
+    <div class="form-group"><label>库码</label><input type="password" id="login-lib-code" required placeholder="请输入库码"></div>
+    <button type="button" class="btn-switch" id="auth-switch-bank-btn">切换题库 (当前：第1题库)</button>
+    <button type="submit" class="btn-primary">登录</button>
+    <button type="button" class="btn-secondary" onclick="startTrial()">免注册试用 (固定题目)</button>
+    <button type="button" class="btn-info" onclick="window.open('help.html', '_blank')">📖 使用说明</button>
+    <div id="login-message" class="message"></div>
+</form>
     <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
         <div class="form-group"><label>邮箱(用户名)</label><input type="email" id="reg-email" required></div>
         <div class="form-group"><label>手机号(云错题库码)</label><input type="tel" id="reg-phone" required pattern="[0-9]{11}"></div>
